@@ -27,13 +27,6 @@ Voice-2-Note is a React-based web application that allows users to create, edit,
 
 ---
 
-🚀 Live Demo
-
-👉 https://voice-2-note.vercel.app  
-*(replace with your actual Vercel URL)*
-
----
-
 📦 Installation & Setup
 
 ```bash
