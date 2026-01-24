@@ -1,0 +1,243 @@
+/* Navbar.css */
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background-color: var(--navbar-background);
+    padding: 8px 16px;
+    margin-bottom: 0;
+    border-radius: 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-bottom: 1px solid var(--border-color);
+    width: 100vw;
+    box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    width: auto;
+}
+
+.hamburger-btn {
+    display: none;
+}
+
+.hamburger-btn-navbar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.hamburger-btn-navbar:hover {
+    background-color: var(--button-hover-background);
+}
+
+.menu-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.hamburger-line {
+    width: 20px;
+    height: 2px;
+    background-color: var(--text-color);
+    border-radius: 1px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.menu-text {
+    display: none;
+}
+
+.navbar-center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    min-width: 0;
+}
+
+.navbar-logo {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin: 0;
+    font-family: 'Ortica', serif;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding-left: 8px;
+}
+
+.navbar-logo:hover {
+    color: var(--primary-color);
+}
+
+.navbar-logo-img {
+    height: 75px;
+    width: auto;
+    cursor: pointer;
+}
+
+.navbar-search {
+    width: 400px;
+    max-width: 500px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    opacity: 0.6;
+    color: var(--text-color);
+    flex-shrink: 0;
+}
+
+.navbar-search input {
+    width: 100%;
+    padding: 10px 16px 10px 40px;
+    border: none;
+    border-radius: 24px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.navbar-search input:focus {
+    outline: none;
+    background-color: var(--card-background);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.navbar-search input::placeholder {
+    color: var(--placeholder-color);
+}
+
+.navbar-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.nav-btn {
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+    color: var(--text-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.nav-btn:hover {
+    background-color: var(--button-hover-background);
+}
+
+.icon-theme,
+.icon-view {
+    width: 20px;
+    height: 20px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.icon-theme {
+    fill: currentColor;
+    stroke: currentColor;
+}
+
+.icon-view {
+    fill: none;
+    stroke: currentColor;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        gap: 8px;
+        padding: 10px 12px;
+        margin-bottom: 15px;
+    }
+    
+    .navbar-logo {
+        font-size: 1.1rem;
+    }
+    
+    .navbar-search {
+        min-width: 150px;
+        max-width: none;
+        flex: 1;
+        margin: 0 8px;
+    }
+    
+    .navbar-search input {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .navbar-left {
+        gap: 8px;
+    }
+    
+    .navbar-logo {
+        font-size: 1rem;
+    }
+    
+    .navbar-search {
+        order: 2;
+        flex-basis: 100%;
+        max-width: none;
+        margin: 0;
+    }
+    
+    .navbar-controls {
+        order: 3;
+        margin-left: 0;
+    }
+}

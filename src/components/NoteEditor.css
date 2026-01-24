@@ -1,0 +1,280 @@
+/* NoteEditor.css */
+
+.note-editor {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 0 auto 30px auto;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.editor-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.note-title {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    transition: border-color 0.2s ease;
+    font-family: inherit;
+}
+
+.note-title:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+}
+
+.editor-toolbar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: var(--toolbar-background);
+    border-radius: 6px;
+    flex-wrap: wrap;
+}
+
+.toolbar-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--button-background);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.btn:hover:not(:disabled) {
+    background-color: var(--button-hover-background);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-speech {
+    font-size: 1.3rem;
+    padding: 8px 16px;
+    background-color: var(--button-background);
+    min-width: 44px;
+}
+
+.btn-speech.listening {
+    background-color: #ff6b6b;
+    color: white;
+    border-color: #ff6b6b;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+    }
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 0 0 4px rgba(255, 107, 107, 0);
+    }
+}
+
+.language-select {
+    padding: 8px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.language-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.btn-format {
+    padding: 8px 10px;
+    min-width: 35px;
+}
+
+.btn-format.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.btn-format.bold {
+    font-weight: bold;
+}
+
+.btn-format.italic {
+    font-style: italic;
+}
+
+.btn-format.underline {
+    text-decoration: underline;
+}
+
+.btn-export {
+    font-size: 1.1rem;
+    padding: 8px 12px;
+}
+
+.btn-save {
+    margin-left: auto;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 10px 20px;
+}
+
+.btn-save:hover {
+    background-color: var(--primary-hover);
+}
+
+.transcript-display {
+    background-color: var(--info-background);
+    border-left: 4px solid var(--primary-color);
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.transcript-display .label {
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 8px 0;
+    font-size: 0.9rem;
+}
+
+.transcript-display .transcript {
+    color: var(--text-color);
+    margin: 5px 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.transcript-display .interim {
+    color: var(--interim-color);
+    font-style: italic;
+    margin: 5px 0;
+    opacity: 0.7;
+}
+
+.btn-add-transcript {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 1px solid var(--secondary-color);
+    margin-top: 10px;
+    font-weight: 600;
+    padding: 8px 14px;
+}
+
+.btn-add-transcript:hover {
+    background-color: var(--secondary-hover);
+    border-color: var(--secondary-hover);
+}
+
+.note-content {
+    width: 100%;
+    min-height: 300px;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    line-height: 1.6;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+.note-content:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+}
+
+.note-content.bold {
+    font-weight: 600;
+}
+
+.note-content.italic {
+    font-style: italic;
+}
+
+.note-content.underline {
+    text-decoration: underline;
+}
+
+.error-msg {
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: rgba(255, 107, 107, 0.1);
+    border-radius: 4px;
+    border-left: 3px solid #ff6b6b;
+}
+
+@media (max-width: 768px) {
+    .note-editor {
+        padding: 15px;
+        margin: 15px;
+    }
+
+    .editor-toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .toolbar-group {
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .btn-save {
+        width: 100%;
+        margin-left: 0;
+    }
+}
