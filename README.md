@@ -23,7 +23,13 @@ Voice-2-Note is a React-based web application that allows users to create, edit,
 - **Speech Recognition:** Web Speech API
 - **State Management:** React Hooks
 - **Storage:** LocalStorage
-- **Deployment:** 
+- **Deployment:** Vercel
+
+---
+
+🚀 Live Demo
+
+👉 https://voice-2-note-pink.vercel.app
 
 ---
 
