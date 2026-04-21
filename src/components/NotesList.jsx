@@ -23,15 +23,15 @@ const NotesList = ({ notes, onEdit, onDelete, onArchive, onRestore, view, isGrid
         const titleA = (a.title || '').toLowerCase();
         const titleB = (b.title || '').toLowerCase();
 
-        // Exact title match gets highest priority
+        //exact title match gets highest priority
         if (titleA === lowerQuery && titleB !== lowerQuery) return -1;
         if (titleB === lowerQuery && titleA !== lowerQuery) return 1;
 
-        // Starts with query gets second priority
+        //starts with query gets second priority
         if (titleA.startsWith(lowerQuery) && !titleB.startsWith(lowerQuery)) return -1;
         if (titleB.startsWith(lowerQuery) && !titleA.startsWith(lowerQuery)) return 1;
 
-        // Title contains query gets third priority (over content only match)
+        //title contains query gets third priority (over content only match)
         const titleAHas = titleA.includes(lowerQuery);
         const titleBHas = titleB.includes(lowerQuery);
 
@@ -66,7 +66,7 @@ const NotesList = ({ notes, onEdit, onDelete, onArchive, onRestore, view, isGrid
             <div className={`notes-container ${isGridView ? 'grid-view' : 'list-view'}`}>
                 {filteredNotes.map((note) => (
                     <div
-                        key={note.id}
+                        key={note._id}
                         className={isGridView ? 'note-item-grid' : 'note-item-list'}
                     >
                         <h3 className="title" onClick={() => onEdit(note)}>
@@ -82,30 +82,30 @@ const NotesList = ({ notes, onEdit, onDelete, onArchive, onRestore, view, isGrid
                                     <button className="note-action-btn" onClick={() => onEdit(note)}>
                                         Edit
                                     </button>
-                                    <button className="note-action-btn" onClick={() => onArchive(note.id)}>
+                                    <button className="note-action-btn" onClick={() => onArchive(note._id)}>
                                         Archive
                                     </button>
-                                    <button className="note-action-btn delete" onClick={() => onDelete(note.id)}>
+                                    <button className="note-action-btn delete" onClick={() => onDelete(note._id)}>
                                         Delete
                                     </button>
                                 </>
                             )}
                             {view === 'archived' && (
                                 <>
-                                    <button className="note-action-btn" onClick={() => onRestore(note.id)}>
+                                    <button className="note-action-btn" onClick={() => onRestore(note._id)}>
                                         Restore
                                     </button>
-                                    <button className="note-action-btn delete" onClick={() => onDelete(note.id)}>
+                                    <button className="note-action-btn delete" onClick={() => onDelete(note._id)}>
                                         Delete
                                     </button>
                                 </>
                             )}
                             {view === 'deleted' && (
                                 <>
-                                    <button className="note-action-btn" onClick={() => onRestore(note.id)}>
+                                    <button className="note-action-btn" onClick={() => onRestore(note._id)}>
                                         Restore
                                     </button>
-                                    <button className="note-action-btn delete" onClick={() => onDelete(note.id)}>
+                                    <button className="note-action-btn delete" onClick={() => onDelete(note._id)}>
                                         Delete
                                     </button>
                                 </>

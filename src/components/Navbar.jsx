@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Navbar.css';
 import logo from '../assets/logo.png';
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = ({
   onSearch,
@@ -12,50 +13,63 @@ const Navbar = ({
   sidebarOpen
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  //keep auth state in sync
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("token"));
+  }, [location]);
 
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
-    if (onSearch) {
-      onSearch(query);
-    }
+    if (onSearch) onSearch(query);
   };
 
   const handleLogoClick = () => {
-    window.location.href = '/';
+    navigate("/");
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    //FORCE full reload
+    window.location.href = "/login";
+};
 
   return (
     <nav className="navbar">
+
+      {/* LEFT */}
       <div className="navbar-left">
         <button
           className="hamburger-btn-navbar"
           onClick={onSidebarToggle}
-          title={sidebarOpen ? 'Collapse Menu' : 'Open Menu'}
-          aria-label="Toggle sidebar"
         >
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
           <span className="hamburger-line"></span>
         </button>
 
-        {/* LOGO */}
         <img
           src={logo}
-          alt="Voice-2-Note logo"
+          alt="logo"
           className="navbar-logo-img"
           onClick={handleLogoClick}
         />
 
-        <h1 className="navbar-logo" onClick={handleLogoClick}>Voice-2-Note</h1>
+        <h1 className="navbar-logo" onClick={handleLogoClick}>
+          Voice-2-Note
+        </h1>
       </div>
 
+      {/* CENTER */}
       <div className="navbar-center">
         <div className="navbar-search">
-          <svg className="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
           <input
             type="text"
             placeholder="Search notes..."
@@ -65,6 +79,7 @@ const Navbar = ({
         </div>
       </div>
 
+      {/* RIGHT */}
       <div className="navbar-controls">
         <button
           className="nav-btn view-toggle"
@@ -94,7 +109,7 @@ const Navbar = ({
           onClick={onThemeToggle}
           title={isDarkMode ? 'Light Mode' : 'Dark Mode'}
         >
-          <svg className="icon-theme" viewBox="0 0 24 24" fill="currentColor">
+          <svg className="icon-theme" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             {isDarkMode ? (
               <>
                 <circle cx="12" cy="12" r="5"></circle>
@@ -112,6 +127,23 @@ const Navbar = ({
             )}
           </svg>
         </button>
+
+        {/* AUTH BUTTONS */}
+        {!isLoggedIn ? (
+          <>
+            <button className="nav-btn" onClick={() => navigate("/login")}>Login</button>
+            <button className="nav-btn" onClick={() => navigate("/signup")}>Signup</button>
+          </>
+        ) : (
+          <button
+            className="nav-btn"
+            onClick={handleLogout}
+            title="Logout"
+          >
+            Logout
+          </button>
+        )}
+
       </div>
     </nav>
   );

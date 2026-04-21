@@ -19,9 +19,7 @@ const LANGUAGES = {
 const NoteEditor = ({ onSave, editingNote }) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [isBold, setIsBold] = useState(false);
-    const [isItalic, setIsItalic] = useState(false);
-    const [isUnderline, setIsUnderline] = useState(false);
+    const textareaRef = React.useRef(null);
     
     const {
         transcript,
@@ -36,7 +34,7 @@ const NoteEditor = ({ onSave, editingNote }) => {
         resetTranscript,
     } = useSpeechRecognition();
 
-    // Warn before unloading if there are unsaved changes or recording is active
+    //warn before unloading if there are unsaved changes or recording is active
     useEffect(() => {
         const handleBeforeUnload = (e) => {
             const isDirty = editingNote
@@ -53,7 +51,7 @@ const NoteEditor = ({ onSave, editingNote }) => {
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
     }, [isListening, title, content, editingNote]);
 
-    // Load note data when editing
+    //load note data when editing
     useEffect(() => {
         if (editingNote) {
             setTitle(editingNote.title);
@@ -63,11 +61,11 @@ const NoteEditor = ({ onSave, editingNote }) => {
         }
     }, [editingNote]);
 
-    // Add transcript to content when it changes
+    //add transcript to content when it changes
     useEffect(() => {
         const fullTranscript = transcript + interimTranscript;
         if (fullTranscript) {
-            // Could auto-update content here if desired
+            //could auto-update content here if desired
         }
     }, [transcript, interimTranscript]);
 
@@ -79,6 +77,54 @@ const NoteEditor = ({ onSave, editingNote }) => {
         }
     };
 
+    const applyFormatting = (format) => {
+        const textarea = textareaRef.current;
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = content.substring(start, end);
+
+        if (!selectedText) {
+            alert('Please select text to format');
+            return;
+        }
+
+        let formattedText = selectedText;
+        switch (format) {
+            case 'bold':
+                formattedText = `**${selectedText}**`;
+                break;
+            case 'italic':
+                formattedText = `*${selectedText}*`;
+                break;
+            case 'underline':
+                formattedText = `__${selectedText}__`;
+                break;
+            default:
+                return;
+        }
+
+        const newContent = content.substring(0, start) + formattedText + content.substring(end);
+        setContent(newContent);
+
+        // Restore focus and move cursor
+        setTimeout(() => {
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + formattedText.length;
+        }, 0);
+    };
+
+    const handleBoldClick = () => {
+        applyFormatting('bold');
+    };
+
+    const handleItalicClick = () => {
+        applyFormatting('italic');
+    };
+
+    const handleUnderlineClick = () => {
+        applyFormatting('underline');
+    };
+
     const handleAddTranscript = () => {
         const fullTranscript = transcript + interimTranscript;
         if (fullTranscript) {
@@ -87,24 +133,9 @@ const NoteEditor = ({ onSave, editingNote }) => {
         }
     };
 
-    const handleBoldClick = () => {
-        setIsBold(!isBold);
-    };
-
-    const handleItalicClick = () => {
-        setIsItalic(!isItalic);
-    };
-
-    const handleUnderlineClick = () => {
-        setIsUnderline(!isUnderline);
-    };
-
     const clearForm = () => {
         setTitle('');
         setContent('');
-        setIsBold(false);
-        setIsItalic(false);
-        setIsUnderline(false);
         resetTranscript();
     };
 
@@ -115,7 +146,6 @@ const NoteEditor = ({ onSave, editingNote }) => {
         }
 
         const note = {
-            id: editingNote?.id || Date.now(),
             title: title.trim() || 'Untitled',
             content: content.trim(),
             createdAt: editingNote?.createdAt || new Date().toISOString(),
@@ -185,23 +215,23 @@ const NoteEditor = ({ onSave, editingNote }) => {
 
                 <div className="toolbar-group">
                     <button
-                        className={`btn btn-format bold ${isBold ? 'active' : ''}`}
+                        className="btn btn-format bold"
                         onClick={handleBoldClick}
-                        title="Bold"
+                        title="Bold (select text first)"
                     >
                         <strong>B</strong>
                     </button>
                     <button
-                        className={`btn btn-format italic ${isItalic ? 'active' : ''}`}
+                        className="btn btn-format italic"
                         onClick={handleItalicClick}
-                        title="Italic"
+                        title="Italic (select text first)"
                     >
                         <em>I</em>
                     </button>
                     <button
-                        className={`btn btn-format underline ${isUnderline ? 'active' : ''}`}
+                        className="btn btn-format underline"
                         onClick={handleUnderlineClick}
-                        title="Underline"
+                        title="Underline (select text first)"
                     >
                         <u>U</u>
                     </button>
@@ -232,9 +262,8 @@ const NoteEditor = ({ onSave, editingNote }) => {
             )}
 
             <textarea
-                className={`note-content ${isBold ? 'bold' : ''} ${isItalic ? 'italic' : ''} ${
-                    isUnderline ? 'underline' : ''
-                }`}
+                ref={textareaRef}
+                className="note-content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Write or speak your note..."

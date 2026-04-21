@@ -132,7 +132,7 @@
     min-width: 35px;
 }
 
-.btn-format.active {
+.btn-format:hover:not(:disabled) {
     background-color: var(--primary-color);
     color: white;
     border-color: var(--primary-color);
@@ -231,18 +231,6 @@
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
-}
-
-.note-content.bold {
-    font-weight: 600;
-}
-
-.note-content.italic {
-    font-style: italic;
-}
-
-.note-content.underline {
-    text-decoration: underline;
 }
 
 .error-msg {
