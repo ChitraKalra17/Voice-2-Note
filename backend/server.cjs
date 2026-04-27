@@ -12,7 +12,9 @@ const app = express();
 
 // middleware
 app.use(cors({
-  origin: "https://voice-2-note-pink.vercel.app"
+  origin: process.env.NODE_ENV === "production" 
+    ? "https://voice-2-note-pink.vercel.app"
+    : "http://localhost:3000"
 }));
 
 app.use(express.json());
