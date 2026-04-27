@@ -11,7 +11,10 @@ const Note = require("./models/Note");
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://voice-2-note-pink.vercel.app"
+}));
+
 app.use(express.json());
 
 //AUTH MIDDLEWARE
