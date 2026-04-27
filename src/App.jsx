@@ -163,9 +163,9 @@ function MainApp() {
 
                     {loading && <p style={{ padding: "20px" }}>Loading...</p>}
 
-                    {error && <p style={{ color: "red", padding: "20px" }}>{error}</p>}
+                    {error && notes.length === 0 && <p style={{ color: "#999", padding: "20px" }}>nothing to see here yet</p>}
 
-                    {!loading && !error && (
+                    {!loading && (
                         <NotesList
                             notes={notes}
                             onEdit={handleEditNote}
