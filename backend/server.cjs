@@ -12,10 +12,15 @@ const app = express();
 
 // middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === "production" 
+  origin: process.env.NODE_ENV === "production"
     ? "https://voice-2-note-pink.vercel.app"
-    : "http://localhost:3000"
+    : "http://localhost:5173", // Vite default (not 3000)
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
 }));
+
+app.options("*", cors());
 
 app.use(express.json());
 
