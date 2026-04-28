@@ -20,8 +20,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.options("*", cors());
-
 app.use(express.json());
 
 //AUTH MIDDLEWARE
@@ -242,4 +240,5 @@ app.patch("/notes/:id/restore", authMiddleware, async (req, res) => {
 
 //SERVER
 app.listen(5000, () => {
+  console.log("Server listening on port 5000");
 });
