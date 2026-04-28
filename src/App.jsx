@@ -163,8 +163,6 @@ function MainApp() {
 
                     {loading && <p style={{ padding: "20px" }}>Loading...</p>}
 
-                    {error && notes.length === 0 && <p style={{ color: "#999", padding: "20px" }}>nothing to see here yet</p>}
-
                     {!loading && (
                         <NotesList
                             notes={notes}
