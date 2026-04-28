@@ -63,21 +63,25 @@ function MainApp() {
     //Save/Update note
     const handleSaveNote = async (note) => {
         try {
+            console.log('Saving note:', note);
             if (editingNote) {
                 const updated = await updateNote(editingNote._id, note);
+                console.log('Updated note:', updated);
 
                 setNotes(prev =>
                     prev.map(n => n._id === updated._id ? updated : n)
                 );
             } else {
                 const saved = await createNote(note);
-                setNotes(prev => [saved, ...prev]);
+                console.log('Created note response:', saved);
+                setNotes(prev => [saved.note, ...prev]);
             }
 
             setEditingNote(null);
 
         } catch (err) {
-            console.error(err);
+            console.error('Error saving note:', err);
+            setError(`Failed to save note: ${err.message}`);
         }
     };
 
