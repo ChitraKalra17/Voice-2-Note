@@ -25,14 +25,17 @@ app.use(express.json());
 //AUTH MIDDLEWARE
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization;
+  console.log('Auth middleware - Token:', token ? 'present' : 'missing');
 
   if (!token) return res.status(401).json({ error: "No token" });
 
   try {
     const decoded = jwt.verify(token, "secretkey");
+    console.log('Auth middleware - User ID:', decoded.userId);
     req.userId = decoded.userId;
     next();
   } catch (err) {
+    console.log('Auth middleware - Token error:', err.message);
     res.status(401).json({ error: "Invalid token" });
   }
 };
@@ -109,6 +112,7 @@ app.get("/notes", authMiddleware, async (req, res) => {
 //CREATE NOTE
 app.post("/notes", authMiddleware, async (req, res) => {
   try {
+    console.log('POST /notes - Creating note with data:', req.body);
     const { title, content, language } = req.body;
 
     const newNote = new Note({
@@ -119,13 +123,14 @@ app.post("/notes", authMiddleware, async (req, res) => {
     });
 
     await newNote.save();
+    console.log('POST /notes - Note saved:', newNote._id);
 
     res.json({
       message: "Note saved successfully",
       note: newNote
     });
-
-  } catch {
+  } catch (err) {
+    console.error('POST /notes - Error:', err);
     res.status(500).json({ error: "Failed to save note" });
   }
 });

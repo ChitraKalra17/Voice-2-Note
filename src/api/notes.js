@@ -37,12 +37,15 @@ export const fetchNotes = async () => {
 
 //CREATE
 export const createNote = async (note) => {
+  console.log('API: Creating note', note);
+  console.log('API: Auth header:', getAuthHeaders());
   const res = await fetch(`${BASE_URL}/notes`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(note),
   });
 
+  console.log('API: Response status:', res.status);
   return handleResponse(res);
 };
 
