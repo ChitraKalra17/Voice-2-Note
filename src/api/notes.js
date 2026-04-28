@@ -6,6 +6,19 @@ const getAuthHeaders = () => ({
   Authorization: localStorage.getItem("token")
 });
 
+//Test connection
+export const testConnection = async () => {
+  try {
+    const res = await fetch(`${BASE_URL}/test`);
+    const data = await res.json();
+    console.log('Test connection response:', data);
+    return data;
+  } catch (err) {
+    console.error('Test connection error:', err);
+    throw err;
+  }
+};
+
 //common response handler
 const handleResponse = async (res) => {
   if (res.status === 401) {

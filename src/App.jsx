@@ -11,7 +11,8 @@ import {
     updateNote,
     toggleArchive,
     softDelete,
-    restoreNote
+    restoreNote,
+    testConnection
 } from './api/notes';
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -44,6 +45,10 @@ function MainApp() {
     useEffect(() => {
         const loadNotes = async () => {
             try {
+                console.log('Testing backend connection...');
+                await testConnection();
+                console.log('Backend connection successful!');
+                
                 console.log('Fetching notes from backend...');
                 const data = await fetchNotes();
                 console.log('Fetched notes:', data);

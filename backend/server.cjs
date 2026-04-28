@@ -44,6 +44,10 @@ const authMiddleware = (req, res, next) => {
 mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.error(err));
 
+//TEST ENDPOINT
+app.get("/test", (req, res) => {
+  res.json({ message: "Backend is connected!" });
+});
 
 //AUTH ROUTES
 
