@@ -71,7 +71,7 @@ function MainApp() {
                 );
             } else {
                 const saved = await createNote(note);
-                setNotes(prev => [saved.note, ...prev]);
+                setNotes(prev => [saved, ...prev]);
             }
 
             setEditingNote(null);
