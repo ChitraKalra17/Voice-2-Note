@@ -11,10 +11,22 @@ const Note = require("./models/Note");
 const app = express();
 
 // middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://voice-2-note-pink.vercel.app"
+];
+
 app.use(cors({
-  origin: process.env.NODE_ENV === "production"
-    ? "https://voice-2-note-pink.vercel.app"
-    : "http://localhost:5173", // Vite default (not 3000)
+  origin: function(origin, callback) {
+    console.log('CORS: Request origin:', origin);
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.error('CORS: Origin not allowed:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
