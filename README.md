@@ -153,5 +153,3 @@ npm run dev
 * LinkedIn: [www.linkedin.com/in/chitra-kalra-938290324](http://www.linkedin.com/in/chitra-kalra-938290324)
 
 ---
-
-⭐ If you like this project, consider giving it a star!
