@@ -221,17 +221,23 @@ app.put("/notes/:id", authMiddleware, async (req, res) => {
 //DELETE NOTE (HARD DELETE)
 app.delete("/notes/:id", authMiddleware, async (req, res) => {
   try {
+    console.log('DELETE /notes/:id - User:', req.userId, 'Note ID:', req.params.id);
     const note = await Note.findOneAndDelete({
       _id: req.params.id,
       userId: req.userId
     });
 
-    if (!note) return res.status(404).json({ error: "Note not found" });
+    if (!note) {
+      console.error('DELETE /notes/:id - Note not found');
+      return res.status(404).json({ error: "Note not found" });
+    }
 
+    console.log('DELETE /notes/:id - Success, permanently deleted');
     res.json({ message: "Deleted" });
 
-  } catch {
-    res.status(500).json({ error: "Failed to delete note" });
+  } catch (err) {
+    console.error('DELETE /notes/:id - Error:', err.message);
+    res.status(500).json({ error: "Failed to delete note: " + err.message });
   }
 });
 

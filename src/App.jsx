@@ -11,6 +11,7 @@ import {
     updateNote,
     toggleArchive,
     softDelete,
+    deleteNote,
     restoreNote,
     testConnection
 } from './api/notes';
@@ -97,7 +98,7 @@ function MainApp() {
         document.querySelector('.note-editor')?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    //Delete
+    //Delete (Soft delete - send to trash)
     const handleDeleteNote = async (id) => {
         try {
             console.log('handleDeleteNote: Starting soft delete for id:', id);
@@ -110,6 +111,20 @@ function MainApp() {
         } catch (err) {
             console.error('handleDeleteNote: Error:', err.message);
             setError(`Failed to delete note: ${err.message}`);
+        }
+    };
+
+    //Permanent Delete (Hard delete - remove from trash)
+    const handlePermanentDeleteNote = async (id) => {
+        try {
+            console.log('handlePermanentDeleteNote: Starting permanent delete for id:', id);
+            await deleteNote(id);
+            console.log('handlePermanentDeleteNote: Success');
+
+            setNotes(prev => prev.filter(n => n._id !== id));
+        } catch (err) {
+            console.error('handlePermanentDeleteNote: Error:', err.message);
+            setError(`Failed to permanently delete note: ${err.message}`);
         }
     };
 
@@ -186,6 +201,7 @@ function MainApp() {
                             notes={notes}
                             onEdit={handleEditNote}
                             onDelete={handleDeleteNote}
+                            onPermanentDelete={handlePermanentDeleteNote}
                             onArchive={handleArchiveNote}
                             onRestore={handleRestoreNote}
                             view={activeView}

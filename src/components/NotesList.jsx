@@ -2,7 +2,7 @@ import React from 'react';
 import './NotesList.css';
 import dateUtils from '../utils/dateUtils';
 
-const NotesList = ({ notes, onEdit, onDelete, onArchive, onRestore, view, isGridView, searchQuery }) => {
+const NotesList = ({ notes, onEdit, onDelete, onPermanentDelete, onArchive, onRestore, view, isGridView, searchQuery }) => {
     const lowerQuery = searchQuery ? searchQuery.toLowerCase() : '';
 
     const filteredNotes = notes.filter((note) => {
@@ -105,8 +105,8 @@ const NotesList = ({ notes, onEdit, onDelete, onArchive, onRestore, view, isGrid
                                     <button className="note-action-btn" onClick={() => onRestore(note._id)}>
                                         Restore
                                     </button>
-                                    <button className="note-action-btn delete" onClick={() => onDelete(note._id)}>
-                                        Delete
+                                    <button className="note-action-btn delete" onClick={() => onPermanentDelete(note._id)}>
+                                        Delete Permanently
                                     </button>
                                 </>
                             )}
