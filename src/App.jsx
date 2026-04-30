@@ -100,39 +100,48 @@ function MainApp() {
     //Delete
     const handleDeleteNote = async (id) => {
         try {
+            console.log('handleDeleteNote: Starting soft delete for id:', id);
             const updated = await softDelete(id);
+            console.log('handleDeleteNote: Success, updated:', updated);
 
             setNotes(prev =>
                 prev.map(n => n._id === id ? updated : n)
             );
         } catch (err) {
-            console.error(err);
+            console.error('handleDeleteNote: Error:', err.message);
+            setError(`Failed to delete note: ${err.message}`);
         }
     };
 
     //Archive
     const handleArchiveNote = async (id) => {
         try {
+            console.log('handleArchiveNote: Starting archive toggle for id:', id);
             const updated = await toggleArchive(id);
+            console.log('handleArchiveNote: Success, updated:', updated);
 
             setNotes(prev =>
                 prev.map(n => n._id === id ? updated : n)
             );
         } catch (err) {
-            console.error(err);
+            console.error('handleArchiveNote: Error:', err.message);
+            setError(`Failed to archive note: ${err.message}`);
         }
     };
 
     //Restore
     const handleRestoreNote = async (id) => {
         try {
+            console.log('handleRestoreNote: Starting restore for id:', id);
             const updated = await restoreNote(id);
+            console.log('handleRestoreNote: Success, updated:', updated);
 
             setNotes(prev =>
                 prev.map(n => n._id === id ? updated : n)
             );
         } catch (err) {
-            console.error(err);
+            console.error('handleRestoreNote: Error:', err.message);
+            setError(`Failed to restore note: ${err.message}`);
         }
     };
 

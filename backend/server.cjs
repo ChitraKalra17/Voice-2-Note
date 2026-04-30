@@ -239,20 +239,26 @@ app.delete("/notes/:id", authMiddleware, async (req, res) => {
 //ARCHIVE TOGGLE
 app.patch("/notes/:id/archive", authMiddleware, async (req, res) => {
   try {
+    console.log('PATCH /notes/:id/archive - User:', req.userId, 'Note ID:', req.params.id);
     const note = await Note.findOne({
       _id: req.params.id,
       userId: req.userId
     });
 
-    if (!note) return res.status(404).json({ error: "Note not found" });
+    if (!note) {
+      console.error('PATCH /notes/:id/archive - Note not found');
+      return res.status(404).json({ error: "Note not found" });
+    }
 
     note.archived = !note.archived;
     await note.save();
+    console.log('PATCH /notes/:id/archive - Success, archived:', note.archived);
 
     res.json(note);
 
-  } catch {
-    res.status(500).json({ error: "Failed to archive note" });
+  } catch (err) {
+    console.error('PATCH /notes/:id/archive - Error:', err.message);
+    res.status(500).json({ error: "Failed to archive note: " + err.message });
   }
 });
 
@@ -260,22 +266,28 @@ app.patch("/notes/:id/archive", authMiddleware, async (req, res) => {
 //SOFT DELETE
 app.patch("/notes/:id/delete", authMiddleware, async (req, res) => {
   try {
+    console.log('PATCH /notes/:id/delete - User:', req.userId, 'Note ID:', req.params.id);
     const note = await Note.findOne({
       _id: req.params.id,
       userId: req.userId
     });
 
-    if (!note) return res.status(404).json({ error: "Note not found" });
+    if (!note) {
+      console.error('PATCH /notes/:id/delete - Note not found');
+      return res.status(404).json({ error: "Note not found" });
+    }
 
     note.deleted = true;
     note.updatedAt = Date.now();
 
     await note.save();
+    console.log('PATCH /notes/:id/delete - Success');
 
     res.json(note);
 
-  } catch {
-    res.status(500).json({ error: "Failed to delete note" });
+  } catch (err) {
+    console.error('PATCH /notes/:id/delete - Error:', err.message);
+    res.status(500).json({ error: "Failed to delete note: " + err.message });
   }
 });
 
@@ -283,22 +295,28 @@ app.patch("/notes/:id/delete", authMiddleware, async (req, res) => {
 //RESTORE
 app.patch("/notes/:id/restore", authMiddleware, async (req, res) => {
   try {
+    console.log('PATCH /notes/:id/restore - User:', req.userId, 'Note ID:', req.params.id);
     const note = await Note.findOne({
       _id: req.params.id,
       userId: req.userId
     });
 
-    if (!note) return res.status(404).json({ error: "Note not found" });
+    if (!note) {
+      console.error('PATCH /notes/:id/restore - Note not found');
+      return res.status(404).json({ error: "Note not found" });
+    }
 
     note.deleted = false;
     note.archived = false;
 
     await note.save();
+    console.log('PATCH /notes/:id/restore - Success');
 
     res.json(note);
 
-  } catch {
-    res.status(500).json({ error: "Failed to restore note" });
+  } catch (err) {
+    console.error('PATCH /notes/:id/restore - Error:', err.message);
+    res.status(500).json({ error: "Failed to restore note: " + err.message });
   }
 });
 
