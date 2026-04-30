@@ -27,7 +27,10 @@ const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization;
   console.log('Auth middleware - Token:', token ? 'present' : 'missing');
 
-  if (!token) return res.status(401).json({ error: "No token" });
+  if (!token) {
+    console.error('Auth middleware - No token provided');
+    return res.status(401).json({ error: "No token" });
+  }
 
   try {
     const decoded = jwt.verify(token, "secretkey");
@@ -35,14 +38,18 @@ const authMiddleware = (req, res, next) => {
     req.userId = decoded.userId;
     next();
   } catch (err) {
-    console.log('Auth middleware - Token error:', err.message);
+    console.error('Auth middleware - Token error:', err.message);
     res.status(401).json({ error: "Invalid token" });
   }
 };
 
 //DB
 mongoose.connect(process.env.MONGO_URI)
-  .catch(err => console.error(err));
+  .then(() => console.log('✓ MongoDB Connected Successfully'))
+  .catch(err => {
+    console.error('✗ MongoDB Connection Error:', err.message);
+    console.error('  MONGO_URI:', process.env.MONGO_URI ? 'is set' : 'is NOT set');
+  });
 
 //TEST ENDPOINT
 app.get("/test", (req, res) => {
@@ -53,50 +60,81 @@ app.get("/test", (req, res) => {
 
 //SIGNUP
 app.post("/auth/signup", async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    const { name, email, password } = req.body;
+    console.log('Signup attempt for email:', email);
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).json({ error: "User already exists" });
+    if (!name || !email || !password) {
+      console.error('Signup: Missing required fields');
+      return res.status(400).json({ error: "Name, email, and password required" });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.error('Signup: User already exists:', email);
+      return res.status(400).json({ error: "User already exists" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword
+    });
+
+    await user.save();
+    console.log('Signup: User created successfully:', email);
+
+    res.json({ message: "User created" });
+  } catch (err) {
+    console.error('Signup: Error:', err.message);
+    res.status(500).json({ error: "Signup failed: " + err.message });
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const user = new User({
-    name,
-    email,
-    password: hashedPassword
-  });
-
-  await user.save();
-
-  res.json({ message: "User created" });
 });
 
 
 //LOGIN
 app.post("/auth/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
+    console.log('Login attempt for email:', email);
 
-  const user = await User.findOne({ email });
-  if (!user) return res.status(400).json({ error: "User not found" });
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ error: "Wrong password" });
-
-  const token = jwt.sign(
-    { userId: user._id },
-    "secretkey",
-    { expiresIn: "7d" }
-  );
-
-  res.json({
-    token,
-    user: {
-      name: user.name,
-      email: user.email
+    if (!email || !password) {
+      console.error('Login: Missing email or password');
+      return res.status(400).json({ error: "Email and password required" });
     }
-  });
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.error('Login: User not found for email:', email);
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      console.error('Login: Wrong password for user:', email);
+      return res.status(400).json({ error: "Wrong password" });
+    }
+
+    const token = jwt.sign(
+      { userId: user._id },
+      "secretkey",
+      { expiresIn: "7d" }
+    );
+
+    console.log('Login: Success for user:', email, 'Token:', token.substring(0, 20) + '...');
+    res.json({
+      token,
+      user: {
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (err) {
+    console.error('Login: Error:', err.message);
+    res.status(500).json({ error: "Login failed: " + err.message });
+  }
 });
 
 
@@ -117,7 +155,12 @@ app.get("/notes", authMiddleware, async (req, res) => {
 app.post("/notes", authMiddleware, async (req, res) => {
   try {
     console.log('POST /notes - Creating note with data:', req.body);
+    console.log('POST /notes - UserId:', req.userId);
     const { title, content, language } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).json({ error: "Title and content are required" });
+    }
 
     const newNote = new Note({
       title,
@@ -127,15 +170,16 @@ app.post("/notes", authMiddleware, async (req, res) => {
     });
 
     await newNote.save();
-    console.log('POST /notes - Note saved:', newNote._id);
+    console.log('POST /notes - Note saved successfully:', newNote._id);
 
     res.json({
       message: "Note saved successfully",
       note: newNote
     });
   } catch (err) {
-    console.error('POST /notes - Error:', err);
-    res.status(500).json({ error: "Failed to save note" });
+    console.error('POST /notes - Error:', err.message);
+    console.error('POST /notes - Full error:', err);
+    res.status(500).json({ error: "Failed to save note: " + err.message });
   }
 });
 

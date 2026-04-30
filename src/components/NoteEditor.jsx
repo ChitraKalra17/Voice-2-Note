@@ -148,11 +148,7 @@ const NoteEditor = ({ onSave, editingNote }) => {
         const note = {
             title: title.trim() || 'Untitled',
             content: content.trim(),
-            createdAt: editingNote?.createdAt || new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-            archived: editingNote?.archived || false,
-            deleted: editingNote?.deleted || false,
-            deletedAt: editingNote?.deletedAt || null,
+            language: language,
         };
 
         if (onSave) {

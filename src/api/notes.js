@@ -23,6 +23,7 @@ export const testConnection = async () => {
 const handleResponse = async (res) => {
   if (res.status === 401) {
     // token expired / invalid
+    console.error('API: 401 Unauthorized - Token invalid or expired');
     localStorage.removeItem("token");
     window.location.href = "/login";
     return;
@@ -31,6 +32,10 @@ const handleResponse = async (res) => {
   const data = await res.json();
 
   if (!res.ok) {
+    console.error('API: Response not OK', {
+      status: res.status,
+      error: data.error
+    });
     throw new Error(data.error || "Something went wrong");
   }
 
@@ -51,14 +56,18 @@ export const fetchNotes = async () => {
 //CREATE
 export const createNote = async (note) => {
   console.log('API: Creating note', note);
-  console.log('API: Auth header:', getAuthHeaders());
+  const headers = getAuthHeaders();
+  console.log('API: Auth header Authorization:', headers.Authorization ? 'present' : 'missing');
+  
   const res = await fetch(`${BASE_URL}/notes`, {
     method: "POST",
-    headers: getAuthHeaders(),
+    headers: headers,
     body: JSON.stringify(note),
   });
 
   console.log('API: Response status:', res.status);
+  console.log('API: Response headers:', res.headers);
+  
   return handleResponse(res);
 };
 

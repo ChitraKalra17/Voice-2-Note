@@ -11,19 +11,36 @@ const Login = ({ onLogin }) => {
 
         try {
             const API = import.meta.env.VITE_API_URL;
+            console.log('Login: API URL:', API);
+            
+            if (!API) {
+                alert("API URL not configured. Please check .env file");
+                return;
+            }
+
+            console.log('Login: Attempting login with email:', email);
             const res = await fetch(`${API}/auth/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email, password })
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password })
             });
 
+            console.log('Login: Response status:', res.status);
             const data = await res.json();
+            console.log('Login: Response data:', data);
 
             if (data.error) {
-            alert(data.error);
-            return;
+                console.error('Login: Server error:', data.error);
+                alert(data.error);
+                return;
+            }
+
+            if (!data.token) {
+                console.error('Login: No token in response');
+                alert("Login failed: No token received");
+                return;
             }
 
             //store token
@@ -31,15 +48,17 @@ const Login = ({ onLogin }) => {
 
             //optional: store user
             if (data.user) {
-            localStorage.setItem("user", JSON.stringify(data.user));
+                localStorage.setItem("user", JSON.stringify(data.user));
             }
 
+            console.log('Login: Success, redirecting to home');
             //redirect to home
             window.location.href = "/";
 
         } catch (err) {
-            console.error(err);
-            alert("Login failed");
+            console.error('Login: Catch error:', err.message);
+            console.error('Login: Full error:', err);
+            alert(`Login failed: ${err.message}`);
         }
     };
 

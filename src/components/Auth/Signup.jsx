@@ -9,7 +9,7 @@ const Signup = ({ onSignup }) => {
     const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
         if (password !== confirmPassword) {
             alert("Passwords do not match");
@@ -17,28 +17,42 @@ const Signup = ({ onSignup }) => {
         }
 
         try {
-            const res = await fetch("http://localhost:5000/auth/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ name, email, password })
+            const API = import.meta.env.VITE_API_URL;
+            console.log('Signup: API URL:', API);
+            
+            if (!API) {
+                alert("API URL not configured. Please check .env file");
+                return;
+            }
+
+            console.log('Signup: Attempting signup with email:', email);
+            const res = await fetch(`${API}/auth/signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ name, email, password })
             });
 
+            console.log('Signup: Response status:', res.status);
             const data = await res.json();
+            console.log('Signup: Response data:', data);
 
             if (data.error) {
-            alert(data.error);
-            return;
+                console.error('Signup: Server error:', data.error);
+                alert(data.error);
+                return;
             }
 
             //after signup → go to login
+            console.log('Signup: Success, redirecting to login');
             alert("Signup successful! Please login.");
             window.location.href = "/login";
 
         } catch (err) {
-            console.error(err);
-            alert("Signup failed");
+            console.error('Signup: Catch error:', err.message);
+            console.error('Signup: Full error:', err);
+            alert(`Signup failed: ${err.message}`);
         }
     };
 
